@@ -18,10 +18,6 @@ PVector prevLeftKneeLocation;
 
 boolean clickOK = false;
 
-int r = 255;
-int g = 255;
-int b = 255;
-
 float finalScore = 0;
 
 float testTime = 10000;
@@ -46,13 +42,13 @@ void step2() {
   backgroundImage = loadImage("KAMAS_2.jpg");
   image(backgroundImage, 0, 0, width, height);
 
-  String[] aimsAnswers = new String[aimsAnswersList.size()];
-  for (int i = 0; i < aimsAnswersList.size(); i++) {
-    aimsAnswersList.get(i);
-    //WHY IS IT STOPPING HERE????
-    println("step2 be runnin");
-
-    if (keyPressed) {
+  if (keyPressed) {
+    println("keypressed");
+    String[] aimsAnswers = new String[aimsAnswersList.size()];
+    for (int i = 0; i < aimsAnswersList.size(); i++) {
+      aimsAnswersList.get(i);
+      //WHY IS IT STOPPING HERE????
+      println("step2 be runnin");
       if (key == 'a' || key == 'A') {
         println("A");
         //load the background image
@@ -80,12 +76,12 @@ void step2() {
         aimsAnswers[i] = "step2" + 'c';
         clickOK = true;
       }
+      saveStrings("testResults" + ".txt", aimsAnswers);
     }//keypressed
   }//for loop
   if (clickOK == true) {
     step2 = true;
   }
-  saveStrings("testResults" + ".txt", aimsAnswers);
 }//step2
 
 void step3() {
@@ -260,7 +256,7 @@ void drawSkeleton(int userId) {
 
   noStroke();
 
-  fill(r, g, b); 
+  fill(255, 0, 0); 
   drawJoint(userId, SimpleOpenNI.SKEL_HEAD); 
   drawJoint(userId, SimpleOpenNI.SKEL_NECK); 
   drawJoint(userId, SimpleOpenNI.SKEL_LEFT_SHOULDER); 
