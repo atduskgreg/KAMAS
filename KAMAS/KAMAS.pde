@@ -22,9 +22,8 @@ void setup() {
 
   //load the background image
   backgroundImage = loadImage("KAMAS_1.jpg");
-  println("IMAGE");
 
-  size(1280, 960); 
+  size(640, 480); 
 
   //initialize joint location objects as vectors
   prevRightHandLocation = new PVector(0, 0, 0);

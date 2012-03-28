@@ -36,7 +36,7 @@ void step1() {
   backgroundImage = loadImage("KAMAS_1.jpg");
   image(backgroundImage, 0, 0, width, height);
   //if the user has clicked over the Continue button area, move to the next step
-  if (mousePressed == true && mouseX > 400 && mouseY > 400) {
+  if (mousePressed == true && mouseX > 380 && mouseY > 300) {
     step1 = true; //user has completed step1
   }
 }
