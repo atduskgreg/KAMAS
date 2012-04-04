@@ -1,15 +1,24 @@
-boolean step1 = false;
-boolean step2 = false;
-boolean step3 = false;
 
-ArrayList aimsAnswersList = new ArrayList();
+boolean drawStep1 = false;
+boolean drawStep2 = false;
+boolean drawStep3 = false;
+boolean drawStep4 = false;
+boolean drawStep5 = false;
+boolean drawStep6 = false;
+
+boolean checkSection1 = true;
+boolean checkSection2 = false;
+boolean checkSection3 = false;
+
+int date = 4412;
+
+ArrayList aimsAnswersList = new ArrayList(); //all answers are loaded into here
 
 Movie intro;
 Movie outro;
 Movie currentMovie;
 
 int[] userMap; //map user points to create user subtraction
-PImage backgroundImage; //background image
 
 PVector prevRightHandLocation;
 PVector prevLeftHandLocation;
@@ -19,6 +28,7 @@ PVector prevLeftKneeLocation;
 boolean clickOK = false;
 
 float finalScore = 0;
+float previousFinalScore = 0;
 
 float testTime = 10000;
 float timeLeft = 0;
@@ -27,80 +37,207 @@ float startTime = 0;
 //no calibration
 boolean autoCalib=true;
 
-void step1() {
-  //load the background image
-  backgroundImage = loadImage("KAMAS_1.jpg");
-  image(backgroundImage, 0, 0, width, height);
-  //if the user has clicked over the Continue button area, move to the next step
-  if (mousePressed == true && mouseX > 380 && mouseY > 300) {
-    step1 = true; //user has completed step1
-  }
+String answers = ""; //store all data into a string
+
+//attract
+void drawStep1() {
+  image(backgroundImage1, 0, 0, width, height);
 }
 
-void step2() {
-  //load the background image
-  backgroundImage = loadImage("KAMAS_2.jpg");
-  image(backgroundImage, 0, 0, width, height);
-
-  if (keyPressed) {
-    println("keypressed");
-    String[] aimsAnswers = new String[aimsAnswersList.size()];
-    for (int i = 0; i < aimsAnswersList.size(); i++) {
-      aimsAnswersList.get(i);
-      //WHY IS IT STOPPING HERE????
-      println("step2 be runnin");
-      if (key == 'a' || key == 'A') {
-        println("A");
-        //load the background image
-        backgroundImage = loadImage("KAMAS_2a.jpg");
-        image(backgroundImage, 0, 0, width, height);
-        //add 'a' to the string for step2
-        aimsAnswers[i] = "step2" + 'a';
-        clickOK = true;
-      }
-
-      else if (key == 'b' || key == 'B') {
-        //load the background image
-        backgroundImage = loadImage("KAMAS_2b.jpg");
-        image(backgroundImage, 0, 0, width, height);
-        //add 'b' to the string for step2
-        aimsAnswers[i] = "step2" + 'b';
-        clickOK = true;
-      }
-
-      else if (key == 'c' || key == 'C') {
-        //load the background image
-        backgroundImage = loadImage("KAMAS_2c.jpg");
-        image(backgroundImage, 0, 0, width, height);
-        //add 'c' to the string for step2
-        aimsAnswers[i] = "step2" + 'c';
-        clickOK = true;
-      }
-      saveStrings("testResults" + ".txt", aimsAnswers);
-    }//keypressed
-  }//for loop
-  if (clickOK == true) {
-    step2 = true;
+//execute
+void checkStep1() {
+  //if the user has clicked over the Continue button area, move to the next step
+  if (mouseX > 380 && mouseY > 300) {
+    drawStep2 = true; //user has completed step1
   }
-}//step2
+}
+//DENTURES? Y/N - attract
+void drawStep2() {
+  image(backgroundImage2, 0, 0, width, height);
+}
 
-void step3() {
-  clickOK = false;
-  //load the background image
-  backgroundImage = loadImage("KAMAS_3.jpg");
-  image(backgroundImage, 0, 0, width, height);
+//execute
+void checkStep2() {
+  if (key == 'a' || key == 'A') {
+    image(backgroundImage2a, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      drawStep3 = true; //step 3 has further denture questions
+    }
+  }
+  else if (key == 'b' || key == 'B') {
+    image(backgroundImage2b, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      //drawStep3 == true;
+      answerCounter++; //advance this and extra time since step 3 is getting skipped
+      drawStep4 = true;
+    }
+  }
+  else if (key == 'c' || key == 'C') {
+    image(backgroundImage2c, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      //drawStep3 == true;
+      answerCounter++; //advance this and extra time since step 3 is getting skipped
+      drawStep4 = true;
+    }
+  }
+}//end check step 2
+
+//DENTURE FOLLOW UP - attract
+void drawStep3() {
+  image(backgroundImage3, 0, 0, width, height);
 }  
 
-void step4() {
+//execute
+void checkStep3() {
+  if (key == 'a' || key == 'A') {
+    image(backgroundImage3a, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep4 = true;
+    }
+  }
+  else if ( key == 'b' || key == 'B') {
+    image(backgroundImage3b, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep4 = true;
+    }
+  }
+}//end check step 3
+
+//TEETH - attract 
+void drawStep4() {
+  image(backgroundImage4, 0, 0, width, height);
+}//end step 4
+
+//execute
+void checkStep4() {
+  if (key == 'a' || key == 'A') {
+    image(backgroundImage4a, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep5 = true;
+    }
+  }
+  else if ( key == 'b' || key == 'B') {
+    image(backgroundImage4b, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep5 = true;
+    }
+  }
+}//end check step 4
+
+//BODY MOVEMENT - attract
+void drawStep5() {
+  image(backgroundImage5, 0, 0, width, height);
+}//end step 5
+
+void checkStep5() {
+  if (key == 'a' || key == 'A') {
+    image(backgroundImage5a, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep6 = true;
+    }
+  }
+  else if ( key == 'b' || key == 'B') {
+    image(backgroundImage5b, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep6 = true;
+    }
+  }
+
+  else if ( key == 'c' || key == 'C') {
+    image(backgroundImage5c, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep6 = true;
+    }
+  }
+
+  else if ( key == 'd' || key == 'D') {
+    image(backgroundImage5d, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep6 = true;
+    }
+  }
+
+  else if ( key == 'e' || key == 'E') {
+    image(backgroundImage5e, 0, 0, width, height);
+    if (mouseX > 380 && mouseY > 300) {
+      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
+      drawStep6 = true;
+      println("END");
+    }
+  }
+}//end check step 5 
+
+//************************questions 1-3 answer logger*************************
+int answerCounter = 0;
+
+void checkSection1() {
+  if (key == 'a' || key == 'A' || key == 'b' || key == 'B' || key == 'c' || key == 'C' || key == 'd' || key == 'D' || key == 'e' || key == 'E') {
+    answers = answers + key;
+    answerCounter++; //add to the answer counter
+    println("answer counter" + answerCounter);
+    String [] aimsAnswers = new String [aimsAnswersList.size()];
+    for (int i = 0; i < aimsAnswersList.size(); i++) {
+    aimsAnswersList.get(i);
+    aimsAnswers[i] = answers; //the answer is the key stroke (answer# + key)
+    }
+    //if the answer counter has reached max, then load step 6 (step 4 in AIMS)
+    if (answerCounter == 10) {
+      println("answer counter should be 10" + answerCounter);
+      checkSection1 = false; 
+      checkSection2 = true;
+    }
+    saveStrings("Test" + date + ".txt", aimsAnswers); //save all answers into a text file
+    println("ANSWERS SAVED!");
+  }//key pressed
+}//end check section 1
+
+//questions 4-12
+void checkSection2() {
+  if (finalScore != previousFinalScore) { //if the value of the final score is different, that means a new step has been completed
+    answers = answers + finalScore; //the answer is the finalScore from each test
+    answerCounter++; //add to the answer counter
+
+    //if the answer counter has reached max, then load step 6 (step 4 in AIMS)
+    if (answerCounter == 22) { //steps 4-12 including repeat steps
+      checkSection1 = false; 
+      checkSection2 = false; 
+      checkSection3 = true;
+    }
+  }
+}//end of check section 2
+
+//save answers
+void checkSection3() {
+  //saveStrings("Test" + date + ".txt", aimsAnswers); //save all answers into a text file
+  //println("ANSWERS SAVED!");
+}
+
+//show answers
+void drawSection3() {
+  //image(backgroundImageAnswers, 0, 0, width, height);
+}
+
+//MOTION TRACKING - execute step 4 of AIMS
+void drawStep6() {
+  kinect.update(); 
+  PImage rgbImage = kinect.rgbImage();
   if (millis() > 4000 && millis() < 53000) { //length of the intro
     image(intro, 0, 0, width, height);
   }
   else {
-    image(backgroundImage, 0, 0, width, height);
+    image(rgbImage, 0, 0, width, height);
     //set up the kinect part
     //scale(2);
-    kinect.update(); 
-    PImage rgbImage = kinect.rgbImage();
     //image(depthImage, 0, 0);
     //image(rgbImage, 0, 0);
     //image(kinect.depthImage(), 0, 0);
@@ -202,36 +339,11 @@ void step4() {
 
         text("Great job!", 15, 50);
         text("Your final score is:" + finalScore, 15, 65);
-        if (key == 't') {
-          PrintWriter output;
-          output = createWriter("finalScore" + millis() + ".txt"); 
-          output.println(finalScore); // Write the coordinate to the file
-          output.flush(); // Writes the remaining data to the file
-          output.close(); // Finishes the file
-        }
+        finalScore = previousFinalScore; //reset the final score for the next step
       }
-
-      /*        else if (finalScore >= 36000 && finalScore <=80000) {
-       fill(5, 200, 100);
-       //scale(2);
-       
-       text("Great job!", 15, 50);
-       text("Your final score is:" + "1", 15, 65);
-       }
-       
-       else if (finalScore >= 36000 && finalScore <=80000) {
-       fill(5, 200, 100);
-       //scale(2);
-       
-       text("Great job!", 15, 50);
-       text("Your final score is:" + "1", 15, 65);
-       } */
-
-      //saveFrame("kinect####.png");
     } // end TrackingSkeleton
   } // end userDataAvaialable
-}
-//}
+} //end draw step 6
 
 
 void drawSkeleton(int userId) { 
