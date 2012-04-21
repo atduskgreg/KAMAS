@@ -42,14 +42,14 @@ PImage backgroundImage5e; //background image
 
 void setup() { 
   frameRate(30);
-  //step6intro = new Movie(this, "step6intro.MOV");
+  step6intro = new Movie(this, "step6intro.MOV");
   //step7intro = new Movie(this, "step7intro.MOV");
   //step8intro = new Movie(this, "step8intro.MOV");
   //step9intro = new Movie(this, "step9intro.MOV");
-  //intro.play(); //play the movie once
+  //step6intro.play(); //play the movie once
   //outro.loop();
 
-  //currentMovie = step6intro;
+  currentMovie = step6intro;
 
   kinect = new SimpleOpenNI(this); //create kinect object
   kinect.enableDepth(); //enable the depth image
@@ -58,8 +58,7 @@ void setup() {
   kinect.alternativeViewPointDepthToImage(); //turn on depth color alignment
 
   //load the background image
-
-    size(640, 480); 
+  size(640, 480); 
   backgroundImage1 = loadImage("KAMAS_1.jpg");
   backgroundImage2 = loadImage("KAMAS_2.jpg");
   backgroundImage2a = loadImage("KAMAS_2a.jpg");
@@ -98,8 +97,10 @@ void setup() {
   oscP5.plug(this, "poseOrientation", "/pose/orientation");
   oscP5.plug(this, "posePosition", "/pose/position");
   oscP5.plug(this, "poseScale", "/pose/scale");
-  
+
   answers = new ArrayList(); //create empty arraylist
+
+    font = loadFont("HighwayGothic-100.vlw");
 }
 
 // Called every time a new frame is available to read
@@ -109,8 +110,6 @@ void movieEvent(Movie m) {
 
 void draw() { 
   if (checkSection1 == true) {
-    //checkSection1();
-    //println("section 1 checked");
     drawStep1();
 
     if (drawStep2== true) {
@@ -121,11 +120,11 @@ void draw() {
       drawStep3();
     }
 
-     if (drawStep4 == true) {
+    if (drawStep4 == true) {
       drawStep4();
     }
 
-     if (drawStep5 == true) {
+    if (drawStep5 == true) {
       drawStep5();
     }
   }//end check section 1
@@ -137,8 +136,9 @@ void draw() {
 }//end draw loop
 
 void mousePressed() {
+  if(checkSection1 == true) {
   checkStep1();
-
+ 
   if (drawStep2 == true) {
     checkStep2();
   }
@@ -151,6 +151,7 @@ void mousePressed() {
   if (drawStep5 == true) {
     checkStep5();
   }
+  }//checkSection1()
 
   //if (drawStep6 == true) {
   //checkStep6();
@@ -175,8 +176,8 @@ void keyPressed() {
     if (drawStep5 == true) {
       checkStep5();
     }
-    //if (drawStep6 == true) {
-    //checkStep6();
+//    if (drawStep6 == true) {
+//      drawStep6();
     //}
   }//checkSection1()
 }//end keypressed

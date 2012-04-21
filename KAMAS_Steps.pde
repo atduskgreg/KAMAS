@@ -20,6 +20,8 @@ Movie step8intro;
 Movie step9intro;
 Movie currentMovie;
 
+boolean played = false; //resets the movie
+
 int[] userMap; //map user points to create user subtraction
 
 PVector prevRightHandLocation;
@@ -42,6 +44,7 @@ boolean autoCalib=true;
 ArrayList answers; //arraylist
 int answerCounter = -1;
 
+PFont font;
 
 //attract
 void drawStep1() {
@@ -75,6 +78,7 @@ void checkStep2() {
   if (key == 'a' || key == 'A') {
     if (mouseX > 380 && mouseY > 300) {
       drawStep3 = true; //step 3 has further denture questions
+      println("should be on step 3");
     }
   }
   else if (key == 'b' || key == 'B') {
@@ -83,6 +87,7 @@ void checkStep2() {
       //drawStep3 == true;
       answers.add("");
       answerCounter++; //advance this and extra time since step 3 is getting skipped
+      drawStep3 = true;
       drawStep4 = true;
     }
   }
@@ -92,6 +97,7 @@ void checkStep2() {
       //drawStep3 == true;
       answers.add("");
       answerCounter++; //advance this and extra time since step 3 is getting skipped
+      drawStep3 = true;
       drawStep4 = true;
     }
   }
@@ -99,6 +105,7 @@ void checkStep2() {
 
 //DENTURE FOLLOW UP - attract
 void drawStep3() {
+   //println("drawing step 3");
   image(backgroundImage3, 0, 0, width, height);
   if (key == 'a' || key == 'A') {
     image(backgroundImage3a, 0, 0, width, height);
@@ -137,13 +144,11 @@ void drawStep4() {
 void checkStep4() {
   if (key == 'a' || key == 'A') {
     if (mouseX > 380 && mouseY > 300) {
-      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
       drawStep5 = true;
     }
   }
   else if ( key == 'b' || key == 'B') {
     if (mouseX > 380 && mouseY > 300) {
-      //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
       drawStep5 = true;
     }
   }
@@ -210,15 +215,12 @@ void checkStep5() {
 //************************questions 1-3 answer logger*************************
 
 void checkSection1() {
-
   if (key == 'a' || key == 'A' || key == 'b' || key == 'B' || key == 'c' || key == 'C' || key == 'd' || key == 'D' || key == 'e' || key == 'E') {
       answers.add("" + key);
       answerCounter++; //add to the answer counter
-//      if (answers.size() > 0) {
-//      String q1 = (String)answers.get(answerCounter);
       println("answer counter" + answerCounter);
       println(answers + "key" + key);
-//      }
+  
       //if the answer counter has reached max, then load step 6 (step 4 in AIMS)
       if (answers.size() == 4) {
         println(answers.size());
@@ -226,14 +228,13 @@ void checkSection1() {
         checkSection1 = false; 
         checkSection2 = true;
 
-        //String q1 = (String)answers.get(0);
-        String q2 = (String)answers.get(0);
-        String q3 = (String)answers.get(1);
-        String q4 = (String)answers.get(2);
-        String q5 = (String)answers.get(3);
+        String q1 = (String)answers.get(0); //step 2
+        String q2 = (String)answers.get(1); //step 3
+        String q3 = (String)answers.get(2); //step 4
+        String q4 = (String)answers.get(3); //step 5
 
         String[] csv = new String[1];
-        csv[0] = q2 + "," + q3 + "," + q4 + "," + q5;
+        csv[0] = q1 + "," + q2 + "," + q3 + "," + q4;
 
         println(d.toString());
         saveStrings("Test" + d + ".txt", csv); //save all answers into a text file
@@ -266,20 +267,21 @@ void checkSection3() {
 
 //MOTION TRACKING - execute step 4 of AIMS - hands on knees
 void drawStep6() {
+  step6intro.play(); //play the movie once
+  image(step6intro, 0, 0, width, height);
+  played = true;
   background(255);
+  fill(255);
+  stroke(0);
+  strokeWeight(2.5);
+  ellipseMode(CENTER);
+  ellipse(320, 240, 200, 200);
+  fill(0);
   kinect.update(); 
   //PImage rgbImage = kinect.rgbImage();
-  //if (millis() > 4000 && millis() < 53000) { //length of the intro
-  //image(step6intro, 0, 0, width, height);
-  //}
-  //else {
-  //image(rgbImage, 0, 0, width, height);
-  //set up the kinect part
-  //scale(2);
-  //image(depthImage, 0, 0);
-  //image(rgbImage, 0, 0);
-  //image(kinect.depthImage(), 0, 0);
+ 
 
+  if (played == true) {
   IntVector userList = new IntVector(); 
   kinect.getUsers(userList);
 
@@ -287,25 +289,6 @@ void drawStep6() {
     int userId = userList.get(0);
 
     if (kinect.isTrackingSkeleton(userId)) { 
-
-      fill(0, 130, 70); //green
-      text("CALIBRATED! ");
-      println("YUP CALIBRATED SHOWED");
-    }
-
-    //      //display the user's image
-    //      //prepare the color pixels
-    //      rgbImage.loadPixels();
-    //      loadPixels();
-    //      userMap = kinect.getUsersPixels(SimpleOpenNI.USERS_ALL);
-    //      for (int i = 0; i < userMap.length; i++) {
-    //        //if the pixel is part of the user
-    //        if (userMap[i] !=0) {
-    //          //set the sketch pixel to the color pixel
-    //          pixels[i] = rgbImage.pixels[i];
-    //        }
-    //      }//end of pixel for loop
-    //      updatePixels();
 
     //millis() start after calibration has happened
     if (startTime == 0) {
@@ -341,45 +324,24 @@ void drawStep6() {
     //float time = millis();
 
     //add the distance moved to itself 
-    if ((millis() - startTime) < 10000) {
-      finalScore += currentScore;
-    }
-
-    scale(3);
-    fill(255, 50, 70);
-    text("Total Score: " + finalScore, 10, 10);
-    //  println("TOTAL SCORE:" + finalScore);
-    //set the current location as the previous location (i.e. reset)
-    prevRightHandLocation = rightHandLocation;
-    prevLeftHandLocation = leftHandLocation;
-    prevRightKneeLocation = rightKneeLocation;
-    prevLeftKneeLocation = leftKneeLocation;
-
-    timeLeft = testTime - (millis() - startTime);
-
-
-    println("tl: " + timeLeft + " st: " + startTime + " m: " + millis());
-
-
-    if ((millis() - startTime) < testTime) {
-      fill(200, 30, 255);
-      //scale(2);
-      text("Time left:" + timeLeft, 0, 20);
-      //text("elapsed:" + (millis() - startTime), 10, 30);
-      fill(200, 30, 255);
-      text("Current Score: " + finalScore, 90, 20);
-    }
-    else {
-      fill(5, 200, 100);
-      //scale(2);
-
-      text("Great job!", 15, 50);
-      text("Your final score is:" + finalScore, 15, 65);
-      finalScore = previousFinalScore; //reset the final score for the next step
-      //}
+   if ((millis() - startTime) < testTime) {
+          fill(20);
+          textFont(font, 100);
+          text("Time left:", 100, 100);
+          text(round((timeLeft/1000)), 290, 270);
+          //text("Current Score: " + finalScore, 90, 20);
+        }
+        else {
+          fill(5, 200, 100);
+          //scale(2);
+          text("Great job!", 15, 50);
+          text("Your final score is:" + finalScore, 15, 65);
+        }//movie is over
+        }//boolean played
     } // end TrackingSkeleton
   } // end userDataAvaialable
   finalScore = 0;
+  played = false;
 } //end draw step 6
 
 //MOTION TRACKING - execute step 5 of AIMS - hands hanging unsupported
