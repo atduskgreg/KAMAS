@@ -4,6 +4,22 @@ import SimpleOpenNI.*;  //middleware to execute skeleton tracking
 SimpleOpenNI kinect; //declare kinect object 
 import java.lang.Runtime;
 import processing.video.*; //to run the intro video
+import oscP5.*;
+
+//face-tracking stuff
+OscP5 oscP5;
+
+PVector posePosition;
+boolean found;
+float eyeLeftHeight;
+float eyeRightHeight;
+float mouthHeight;
+float mouthWidth;
+float nostrilHeight;
+float leftEyebrowHeight;
+float rightEyebrowHeight;
+
+float poseScale;
 
 PImage backgroundImage1; //background image
 PImage backgroundImage2; //background image
@@ -25,13 +41,15 @@ PImage backgroundImage5e; //background image
 
 
 void setup() { 
-
-  //intro = new Movie(this, "KAMAS_intro.MOV");
-  //outro = new Movie(this, "KAMAS_outro");
+  frameRate(30);
+  //step6intro = new Movie(this, "step6intro.MOV");
+  //step7intro = new Movie(this, "step7intro.MOV");
+  //step8intro = new Movie(this, "step8intro.MOV");
+  //step9intro = new Movie(this, "step9intro.MOV");
   //intro.play(); //play the movie once
   //outro.loop();
 
-  //currentMovie = intro;
+  //currentMovie = step6intro;
 
   kinect = new SimpleOpenNI(this); //create kinect object
   kinect.enableDepth(); //enable the depth image
@@ -66,6 +84,22 @@ void setup() {
   prevLeftHandLocation = new PVector(0, 0, 0);
   prevRightKneeLocation = new PVector(0, 0, 0);
   prevLeftKneeLocation = new PVector(0, 0, 0);
+
+  oscP5 = new OscP5(this, 8338);
+  oscP5.plug(this, "mouthWidthReceived", "/gesture/mouth/width");
+  oscP5.plug(this, "mouthHeightReceived", "/gesture/mouth/height");
+  oscP5.plug(this, "eyebrowLeftReceived", "/gesture/eyebrow/left");
+  oscP5.plug(this, "eyebrowRightReceived", "/gesture/eyebrow/right");
+  oscP5.plug(this, "eyeLeftReceived", "/gesture/eye/left");
+  oscP5.plug(this, "eyeRightReceived", "/gesture/eye/right");
+  oscP5.plug(this, "jawReceived", "/gesture/jaw");
+  oscP5.plug(this, "nostrilsReceived", "/gesture/nostrils");
+  oscP5.plug(this, "found", "/found");
+  oscP5.plug(this, "poseOrientation", "/pose/orientation");
+  oscP5.plug(this, "posePosition", "/pose/position");
+  oscP5.plug(this, "poseScale", "/pose/scale");
+  
+  answers = new ArrayList(); //create empty arraylist
 }
 
 // Called every time a new frame is available to read
@@ -75,7 +109,8 @@ void movieEvent(Movie m) {
 
 void draw() { 
   if (checkSection1 == true) {
-
+    //checkSection1();
+    //println("section 1 checked");
     drawStep1();
 
     if (drawStep2== true) {
@@ -86,21 +121,22 @@ void draw() {
       drawStep3();
     }
 
-    if (drawStep4 == true) {
+     if (drawStep4 == true) {
       drawStep4();
     }
 
-    if (drawStep5 == true) {
+     if (drawStep5 == true) {
       drawStep5();
     }
-    //if (step6 == true) {
-    //drawStep6();
-    //}
   }//end check section 1
+  if (checkSection2 == true) {
+    if (drawStep6 == true) {
+      drawStep6();
+    }
+  }//checkSection2()
 }//end draw loop
 
 void mousePressed() {
-
   checkStep1();
 
   if (drawStep2 == true) {
@@ -115,29 +151,33 @@ void mousePressed() {
   if (drawStep5 == true) {
     checkStep5();
   }
+
   //if (drawStep6 == true) {
   //checkStep6();
   //}
 }//end mousepressed
 
 void keyPressed() {
-  if (drawStep1 == true) {
-    checkStep1();
-  }
-  if (drawStep2 == true) {
-    checkStep2();
-  }
-  if (drawStep3 == true) {
-    checkStep3();
-  }
-  if (drawStep4 == true) {
-    checkStep4();
-  }
-  if (drawStep5 == true) {
-    checkStep5();
-  }
-  //if (drawStep6 == true) {
-  //checkStep6();
-  //}
+  if (checkSection1 == true) {
+    checkSection1();
+    if (drawStep1 == true) {
+      checkStep1();
+    }
+    if (drawStep2 == true) {
+      checkStep2();
+    }
+    if (drawStep3 == true) {
+      checkStep3();
+    }
+    if (drawStep4 == true) {
+      checkStep4();
+    }
+    if (drawStep5 == true) {
+      checkStep5();
+    }
+    //if (drawStep6 == true) {
+    //checkStep6();
+    //}
+  }//checkSection1()
 }//end keypressed
 
