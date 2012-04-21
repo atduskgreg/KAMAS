@@ -81,6 +81,7 @@ void checkStep2() {
     if (mouseX > 380 && mouseY > 300) {
       //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
       //drawStep3 == true;
+      answers.add("");
       answerCounter++; //advance this and extra time since step 3 is getting skipped
       drawStep4 = true;
     }
@@ -89,6 +90,7 @@ void checkStep2() {
     if (mouseX > 380 && mouseY > 300) {
       //skip step 3 since it pertains to wearing dentures and the patient doesn't have any in their mouth
       //drawStep3 == true;
+      answers.add("");
       answerCounter++; //advance this and extra time since step 3 is getting skipped
       drawStep4 = true;
     }
@@ -212,13 +214,14 @@ void checkSection1() {
   if (key == 'a' || key == 'A' || key == 'b' || key == 'B' || key == 'c' || key == 'C' || key == 'd' || key == 'D' || key == 'e' || key == 'E') {
       answers.add("" + key);
       answerCounter++; //add to the answer counter
-      if (answers.size() > 0) {
-      String q1 = (String)answers.get(answerCounter);
+//      if (answers.size() > 0) {
+//      String q1 = (String)answers.get(answerCounter);
       println("answer counter" + answerCounter);
       println(answers + "key" + key);
-      }
+//      }
       //if the answer counter has reached max, then load step 6 (step 4 in AIMS)
-      if (answerCounter == 4) {
+      if (answers.size() == 4) {
+        println(answers.size());
         println("answer counter should be 4" + answerCounter);
         checkSection1 = false; 
         checkSection2 = true;
